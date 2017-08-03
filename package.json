@@ -1,0 +1,11 @@
+{
+  "name": "rx-workshop",
+  "version": "1.0.0",
+  "description": "A workshop with code work to teach Rx.js",
+  "main": "1-array-transformation-sequence.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "justin@cix.io",
+  "license": "MIT"
+}
