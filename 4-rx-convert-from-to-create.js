@@ -1,18 +1,28 @@
-var Rx = require('rx');
+var Rx = require('rxjs/Rx');
 
-var arr = [ '1', '2', '3'];
-
-Rx.Observable.from(arr)
-	.subscribe(function onNext(data) {
-		console.log(data);
-	});
-
-Rx.Observable.create(function (observer) {
-		arr.forEach(function (num) {
-			observer.onNext(num);
+// Example input: `[ 'Sarah Johanson', 'Saleem Ada' ]`
+exports.convertToObjWithCreate$ = function convertToObj$(userArray) {
+	return Rx.Observable.create(
+			function (observer) {
+				userArray.forEach(function (user) {
+					observer.next(user);
+				});
+				observer.complete();
+			}
+		)
+		.map(function (name) {
+			var nameArr = name.split(' ');
+			return {
+				firstName: nameArr[0],
+				lastName: nameArr[1]
+			}
 		})
-		observer.onCompleted();
-	})
-	.subscribe(function onNext(data) {
-		console.log(data);
-	});
+		.map(function (user) {
+			var userKey = user.firstName.toLowerCase() + user.lastName;
+			return Object.assign(user, { userKey: userKey });
+		})
+		.reduce(function (previous, next) {
+			previous[next.userKey] = next;
+			return previous;
+		}, {});
+};

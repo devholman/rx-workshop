@@ -1,8 +1,12 @@
 var Rx = require('rxjs/Rx');
 
-// Example input: `[ 'Sarah Johanson', 'Saleem Ada' ]`
-exports.convertToObj$ = function convertToObj$(userArray) {
-	return Rx.Observable.from(userArray)
+/** Input is a function with a callback completion method:
+ * function getUsers(callback) {
+ * 	callback([ 'Sarah Johanson', 'Saleem Ada' ]);
+ * }
+ */
+exports.convertToObjWithBindCb$ = function convertToObjWithBindCb$(getUsers) {
+	return Rx.Observable.bindCallback(getUsers)()
 		.map(function (name) {
 			var nameArr = name.split(' ');
 			return {

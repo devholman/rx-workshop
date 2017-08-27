@@ -1,31 +1,26 @@
-var Rx = require('rx');
-
-// Source
-var names = [ 'Sarah Smith', 'Adam Scott', 'Eve Livingston'];
+var Rx = require('rxjs/Rx');
 
 // Creation method `from`
-var usersObj$ = Rx.Observable.from(names);
+// Example input: `[ 'Sarah Johanson', 'Saleem Ada' ]`
+exports.convertToObservable$ = function convertToObservable$(userArray) {
+	return Rx.Observable.from(userArray);
+};
 
 // Sequence of instance methods `map` and `reduce`
-usersObj$.map(function (name) {
-		var nameArr = name.split(' ');
-		return {
-			firstName: nameArr[0],
-			lastName: nameArr[1]
-		}
-	})
-	.map(function (user) {
-		var userKey = user.firstName.toLowerCase() + user.lastName;
-		return Object.assign(user, { key: userKey });
-	})
-	.reduce(function (previous, next) {
-		previous[next.key] = next;
-		return previous;
-	}, {});
-
-// Subscription (execution) method
-usersObj$.subscribe(
-	function onNext(data) {
-		console.log(data);
-	}
-)
+exports.transformer$ = function transformer$(userObj$) {
+	return userObj$.map(function (name) {
+			var nameArr = name.split(' ');
+			return {
+				firstName: nameArr[0],
+				lastName: nameArr[1]
+			}
+		})
+		.map(function (user) {
+			var userKey = user.firstName.toLowerCase() + user.lastName;
+			return Object.assign(user, { userKey: userKey });
+		})
+		.reduce(function (previous, next) {
+			previous[next.userKey] = next;
+			return previous;
+		}, {});
+};

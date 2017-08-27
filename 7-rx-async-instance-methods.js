@@ -1,23 +1,23 @@
-var Rx = require('rx');
+var Rx = require('rxjs/Rx');
 
-var func = function (time, callback) {
-	setTimeout(function () {
-		callback(time);
-	}, time);
+/**
+ * Input will be an array of plain numbers, and a timeoutFunction like the below
+ * var timeoutFunction = function (time, callback) {
+ * 	setTimeout(function () {
+ * 		callback(time);
+ * 	}, time);
+ * };
+ */
+exports.flatMapExample$ = function flatMapExample$(timesArray, timeoutFunction) {
+	return Rx.Observable.from(timesArray)
+		.flatMap(function (time) {
+			return Rx.Observable.bindCallback(timeoutFunction)(time);
+		});
 };
 
-Rx.Observable.from([1000, 500, 250, 100])
-	.flatMap(function (time) {
-		return Rx.Observable.fromCallback(func)(time);
-	})
-	.subscribe(function onNext(data) {
-		console.log(data);
-	});
-
-Rx.Observable.from([1000, 500, 250, 100])
-	.concatMap(function (time) {
-		return Rx.Observable.fromCallback(func)(time);
-	})
-	.subscribe(function onNext(data) {
-		console.log(data);
-	});
+exports.concatMapExample$ = function flatMapExample$(timesArray, timeoutFunction) {
+	return Rx.Observable.from(timesArray)
+		.concatMap(function (time) {
+			return Rx.Observable.bindCallback(timeoutFunction)(time);
+		});
+};
